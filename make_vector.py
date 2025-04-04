@@ -10,10 +10,7 @@ from langchain.docstore.document import Document
 from langchain_ollama import OllamaEmbeddings   # Ollama Embeddings
 from langchain_community.vectorstores import FAISS
 
-
-
 # 🔧 설정
-# upload_dir = "upload_docs"
 upload_dir = "upload_docs"
 index_path = "faiss_index3"
 chunk_cache_path = os.path.join(index_path, "chunks.pkl")
@@ -52,9 +49,6 @@ chunk_pages = {
     "2025 한국외대.pdf": (3, None),
     "2025 한양대.pdf": (3, 22)
 }
-
-
-
 
 def reduce_spaces(text: str) -> str:
     return re.sub(r' {2,}', '', text)
@@ -106,7 +100,7 @@ def load_pdf_file(file_path, file_name):
         for page_number in range(start_idx, end_idx):
             text = extract_text_from_pdf(pdf_fitz, page_number)
             tables = extract_tables_from_pdf(pdf_plumber, page_number)
-            combined_text = "".join(tables) + "\n\n" + text
+            combined_text = text + "\n" + "\n".join(tables)
 
             doc = Document(
                 page_content=combined_text,
@@ -169,5 +163,3 @@ print("💾 벡터스토어 생성 중...")
 vectorstore = FAISS.from_documents(chunks, embedding_model)
 vectorstore.save_local(index_path)
 print("✅ 완료!")
-
-
