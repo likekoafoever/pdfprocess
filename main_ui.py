@@ -33,11 +33,11 @@ system_prompt = """너는 대한한국 법학전문대학원/로스쿨의 입시
 반드시 프롬프트에 포함된 내용을 바탕으로 한국어로 짧고 간결하게 답변해."""
 
 #embedding_model = OllamaEmbeddings(model="bge-m3")
-embedding_model = OllamaEmbeddings(model="exaone3.5")
+embedding_model = OllamaEmbeddings(model="llama3.2")
 #embedding_model = OllamaEmbeddings(model="benedict/linkbricks-llama3.1-korean:8b")
 
 #llm = OllamaLLM(model="benedict/linkbricks-llama3.1-korean:8b", system=system_prompt)
-llm = OllamaLLM(model="exaone3.5", system=system_prompt)
+llm = OllamaLLM(model="llama3.2", system=system_prompt)
 #llm = OllamaLLM(model="gemma3:4b", system=system_prompt)
 
 # 🧠 프롬프트 템플릿 정의

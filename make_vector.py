@@ -7,9 +7,13 @@ import pickle   # chunks 캐시 저장
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
+from langchain_ollama import OllamaEmbeddings   # Ollama Embeddings
 from langchain_community.vectorstores import FAISS
-from langchain_ollama import OllamaEmbeddings
+
+
+
 # 🔧 설정
+# upload_dir = "upload_docs"
 upload_dir = "upload_docs"
 index_path = "faiss_index3"
 chunk_cache_path = os.path.join(index_path, "chunks.pkl")
@@ -17,9 +21,7 @@ faiss_file = os.path.join(index_path, "index.faiss")
 pkl_file = os.path.join(index_path, "index.pkl")
 
 # embedding_model = OllamaEmbeddings(model="bge-m3")
-embedding_model = OllamaEmbeddings(model="exaone3.5")
-
-
+embedding_model = OllamaEmbeddings(model="llama3.2")
 
 # 대학별 입시요강 chunk 대상 페이지 정의
 chunk_pages = {
@@ -52,15 +54,8 @@ chunk_pages = {
 }
 
 
-# embedding_model 설정
-embedding_model = OllamaEmbeddings(model="exaone3.5")
 
 
-upload_dir = "upload_docs"
-index_path = "faiss_index3"
-chunk_cache_path = os.path.join(index_path, "chunks.pkl")
-faiss_file = os.path.join(index_path, "index.faiss")
-pkl_file = os.path.join(index_path, "index.pkl")
 def reduce_spaces(text: str) -> str:
     return re.sub(r' {2,}', '', text)
 
@@ -90,16 +85,13 @@ def process_pdfs_to_chunks():
     print("🧩 페이지별 청크 생성 중...")
     splitter = SemanticChunker(embedding_model)
     #splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
-    # splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
     chunks = splitter.split_documents(all_docs)
 
     print("💾 캐시 저장 중...")
     with open(chunk_cache_path, "wb") as f:
         pickle.dump(chunks, f)
-
     print("✅ 완료! 총 청크 수:", len(chunks))
     return chunks
-
 
 def load_pdf_file(file_path, file_name):
     docs = []
@@ -177,3 +169,5 @@ print("💾 벡터스토어 생성 중...")
 vectorstore = FAISS.from_documents(chunks, embedding_model)
 vectorstore.save_local(index_path)
 print("✅ 완료!")
+
+
