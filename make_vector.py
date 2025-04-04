@@ -1,6 +1,5 @@
 import os
 import re
-import warnings
 import pandas as pd
 import fitz  # PyMuPDF
 import pdfplumber
@@ -20,7 +19,7 @@ pkl_file = os.path.join(index_path, "index.pkl")
 # embedding_model = OllamaEmbeddings(model="bge-m3")
 embedding_model = OllamaEmbeddings(model="exaone3.5")
 
-warnings.filterwarnings("ignore", message="CropBox missing from /Page, defaulting to MediaBox")
+
 
 # 대학별 입시요강 chunk 대상 페이지 정의
 chunk_pages = {
@@ -53,6 +52,15 @@ chunk_pages = {
 }
 
 
+# embedding_model 설정
+embedding_model = OllamaEmbeddings(model="exaone3.5")
+
+
+upload_dir = "upload_docs"
+index_path = "faiss_index3"
+chunk_cache_path = os.path.join(index_path, "chunks.pkl")
+faiss_file = os.path.join(index_path, "index.faiss")
+pkl_file = os.path.join(index_path, "index.pkl")
 def reduce_spaces(text: str) -> str:
     return re.sub(r' {2,}', '', text)
 
@@ -82,6 +90,7 @@ def process_pdfs_to_chunks():
     print("🧩 페이지별 청크 생성 중...")
     splitter = SemanticChunker(embedding_model)
     #splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
+    # splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
     chunks = splitter.split_documents(all_docs)
 
     print("💾 캐시 저장 중...")
@@ -158,14 +167,13 @@ def extract_tables_from_pdf(pdf_plumber, page_number):
 def clean_university_name(file_name):
     return file_name.replace("2025 ", "").rsplit(".", 1)[0]
 
-
 # PDFs -> Chunks
 chunks = process_pdfs_to_chunks()
 
 
 print("💾 벡터스토어 생성 중...")
 # 벡터스토어 만들기
+print("💾 벡터스토어 생성 중...")
 vectorstore = FAISS.from_documents(chunks, embedding_model)
 vectorstore.save_local(index_path)
 print("✅ 완료!")
-

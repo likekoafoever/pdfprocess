@@ -1,0 +1,34 @@
+# .gitignore 파일
+
+# 모든 PDF 파일 제외
+*.pdf
+
+# 모든 .chunk 파일 제외
+*.pkl
+
+# 모든 .bvecstore 파일 제외
+*.bvecstore
+*.faiss
+
+# 추가적으로 일반적으로 Git에서 무시되는 파일들 (옵션)
+# 숨겨진 파일들 제외
+*.swp
+*.swp~
+
+# 실행 파일 및 빌드 아티팩트 제외
+*.exe
+*.dll
+*.pdb
+*.obj
+*.class
+*.log
+
+# 미디어 파일들 제외 (필요에 따라 추가)
+*.mp3
+*.mp4
+*.avi
+
+# 개발 도구 생성 파일 제외 (필요에 따라 추가)
+*.tmp
+*.DS_Store  # macOS에서 생성되는 파일 무시
+*.ipynb
