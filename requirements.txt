@@ -1,0 +1,12 @@
+streamlit
+PyMuPDF
+faiss-cpu
+langchain
+langchain-community
+langchain-core
+langchain-experimental
+langchain-ollama
+sentence-transformers
+transformers
+torch
+pydantic>=2.0
