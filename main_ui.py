@@ -32,13 +32,13 @@ system_prompt = """너는 대한한국 법학전문대학원/로스쿨의 입시
 
 반드시 프롬프트에 포함된 내용을 바탕으로 한국어로 짧고 간결하게 답변해."""
 
-#embedding_model = OllamaEmbeddings(model="bge-m3")
-embedding_model = OllamaEmbeddings(model="llama3.2")
+embedding_model = OllamaEmbeddings(model="bge-m3")
+#embedding_model = OllamaEmbeddings(model="llama3.2")
 #embedding_model = OllamaEmbeddings(model="benedict/linkbricks-llama3.1-korean:8b")
 
 #llm = OllamaLLM(model="benedict/linkbricks-llama3.1-korean:8b", system=system_prompt)
-llm = OllamaLLM(model="llama3.2", system=system_prompt)
-#llm = OllamaLLM(model="gemma3:4b", system=system_prompt)
+#llm = OllamaLLM(model="llama3.2", system=system_prompt)
+llm = OllamaLLM(model="gemma3:4b", system=system_prompt)
 
 # 🧠 프롬프트 템플릿 정의
 prompt = ChatPromptTemplate.from_messages([
@@ -47,7 +47,7 @@ prompt = ChatPromptTemplate.from_messages([
         다음은 여러 대학의 2025학년도 입시요강 문서에서 추출한 정보입니다.
         제시된 정보는 법학전문대학원/로스쿨의 내용으로 [[start text]] 정보 [[end text]] 내용을 참고하세요.
                 
-        출처를 확인해서 주어진 정보를 기반으로 질문에 자세히 응답해 주세요.
+        출처를 확인해서 주어진 정보를 기반으로 질문에 한국어로 자세히 응답해 주세요.
         
         {input_documents}
         
@@ -139,7 +139,7 @@ def main():
 
                     status = st.empty()
                     status.write(f"🎯 {univ} 문서정보 검색 중...")
-                    docs = vectorstore.similarity_search(question, k=3, filter={"university": univ})
+                    docs = vectorstore.similarity_search(question, k=5, filter={"university": univ})
                     response = create_stuff_documents_chain(
                                 llm, prompt, document_variable_name="input_documents"
                             ).invoke({

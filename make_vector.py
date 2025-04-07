@@ -17,8 +17,8 @@ chunk_cache_path = os.path.join(index_path, "chunks.pkl")
 faiss_file = os.path.join(index_path, "index.faiss")
 pkl_file = os.path.join(index_path, "index.pkl")
 
-# embedding_model = OllamaEmbeddings(model="bge-m3")
-embedding_model = OllamaEmbeddings(model="llama3.2")
+embedding_model = OllamaEmbeddings(model="bge-m3")
+#embedding_model = OllamaEmbeddings(model="llama3.2")
 
 # 대학별 입시요강 chunk 대상 페이지 정의
 chunk_pages = {
@@ -77,8 +77,8 @@ def process_pdfs_to_chunks():
             print(f"❌ {file_name} 처리 중 오류 발생: {e}")
 
     print("🧩 페이지별 청크 생성 중...")
-    splitter = SemanticChunker(embedding_model)
-    #splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
+    #splitter = SemanticChunker(embedding_model)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
     chunks = splitter.split_documents(all_docs)
 
     print("💾 캐시 저장 중...")
@@ -156,8 +156,6 @@ def clean_university_name(file_name):
 # PDFs -> Chunks
 chunks = process_pdfs_to_chunks()
 
-
-print("💾 벡터스토어 생성 중...")
 # 벡터스토어 만들기
 print("💾 벡터스토어 생성 중...")
 vectorstore = FAISS.from_documents(chunks, embedding_model)
